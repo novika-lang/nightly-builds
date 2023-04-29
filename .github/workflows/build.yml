@@ -23,30 +23,25 @@ jobs:
           version: 1.0
       - name: Build Novika
         working-directory: novika
-        run: shards build -Dnovika_console -Dnovika_readline --release --no-debug -Dpreview_mt --without-development
+        run: shards build -Dnovika_console -Dnovika_readline --no-debug -Dpreview_mt --without-development
       - name: Compress binaries using upx
         working-directory: novika
         run: upx --best bin/nkas bin/novika bin/nki
       - name: Store release directory name in env
-        run: export NOVIKA_DIR_NAME=novika-$(git describe --tags)-linux-x86_64
-      - name: Create the release directory
-        run: mkdir -p $NOVIKA_DIR_NAME/bin
-      - name: Copy binaries into the release directory
         working-directory: novika
-        run: cp bin/novika bin/nkas bin/nki ../$NOVIKA_DIR_NAME/bin
-      - name: Copy environment into the release directory
-        working-directory: novika
-        run: cp -r env ../$NOVIKA_DIR_NAME/env
-      - name: Remove Windows dlls from the environment directory
-        working-directory: $NOVIKA_DIR_NAME
-        run: rm env/*.dll
-      - name: Copy README and LICENSE
-        working-directory: $NOVIKA_DIR_NAME
-        run: cp ../README.md ../LICENSE .
-      - name: Archive the release directory
-        run: tar -czf $NOVIKA_DIR_NAME.tar.gz $NOVIKA_DIR_NAME
+        run: |
+          export NOVIKA_DIR_NAME=novika-$(git describe --tags)-linux-x86_64
+          mkdir -p ../$NOVIKA_DIR_NAME/bin
+          cp  bin/novika bin/nkas bin/nki ../$NOVIKA_DIR_NAME/bin
+          cp -r env ../$NOVIKA_DIR_NAME/env
+          cd $NOVIKA_DIR_NAME
+          rm env/*.dll
+          cp ../README.md ../LICENSE .
+          cd ..
+          tar -czf $NOVIKA_DIR_NAME.tar.gz $NOVIKA_DIR_NAME
+          echo "NOVIKA_DIR_NAME=$NOVIKA_DIR_NAME" >> $GITHUB_ENV
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: $NOVIKA_DIR_NAME.tar.gz
-          path: $NOVIKA_DIR_NAME.tar.gz
+          name: ${{ env.NOVIKA_DIR_NAME }}.tar.gz
+          path: ${{ env.NOVIKA_DIR_NAME }}.tar.gz
