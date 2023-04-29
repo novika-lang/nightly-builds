@@ -11,13 +11,9 @@ jobs:
       - name: Cancel previous
         uses: styfle/cancel-workflow-action@0.11.0
       - name: Download source
-        uses: actions/checkout@v3
-      - name: Download submodules
-        shell: bash
-        run: |
-          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
-          git submodule sync --recursive
-          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
       - name: Install UPX
