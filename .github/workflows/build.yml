@@ -21,30 +21,28 @@ jobs:
         with:
           packages: upx-ucl
           version: 1.0
-      - name: Go into the Novika directory
-        run: cd novika
-      - name: fek
-        run: tree
       - name: Build Novika
+        working-directory: novika
         run: shards build -Dnovika_console -Dnovika_readline --release --no-debug -Dpreview_mt --without-development
       - name: Compress binaries using upx
+        working-directory: novika
         run: upx --best bin/nkas bin/novika bin/nki
       - name: Store release directory name in env
         run: export NOVIKA_DIR_NAME=novika-$(git describe --tags)-linux-x86_64
       - name: Create the release directory
-        run: mkdir -p ../$NOVIKA_DIR_NAME/bin
+        run: mkdir -p $NOVIKA_DIR_NAME/bin
       - name: Copy binaries into the release directory
+        working-directory: novika
         run: cp bin/novika bin/nkas bin/nki ../$NOVIKA_DIR_NAME/bin
       - name: Copy environment into the release directory
+        working-directory: novika
         run: cp -r env ../$NOVIKA_DIR_NAME/env
-      - name: Go into the environment directory
-        run: cd ../$NOVIKA_DIR_NAME
       - name: Remove Windows dlls from the environment directory
+        working-directory: $NOVIKA_DIR_NAME
         run: rm env/*.dll
       - name: Copy README and LICENSE
+        working-directory: $NOVIKA_DIR_NAME
         run: cp ../README.md ../LICENSE .
-      - name: Go up
-        run: cd ..
       - name: Archive the release directory
         run: tar -czf $NOVIKA_DIR_NAME.tar.gz $NOVIKA_DIR_NAME
       - name: Upload Artifact
