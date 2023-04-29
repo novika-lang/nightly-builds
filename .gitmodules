@@ -1,0 +1,3 @@
+[submodule "novika"]
+	path = novika
+	url = https://github.com/novika-lang/novika
