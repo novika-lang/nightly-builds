@@ -14,10 +14,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
-      - name: Initialize submodules
-        run: |
-          git submodule sync
-          git submodule update --init --recursive
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
       - name: Install UPX
@@ -27,6 +23,8 @@ jobs:
           version: 1.0
       - name: Go into the Novika directory
         run: cd novika
+      - name: fek
+        run: tree
       - name: Build Novika
         run: shards build -Dnovika_console -Dnovika_readline --release --no-debug -Dpreview_mt --without-development
       - name: Compress binaries using upx
