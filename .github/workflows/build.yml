@@ -16,8 +16,9 @@ jobs:
         uses: actions/checkout@v3
       - name: Download latest Novika
         uses: actions/checkout@v3
-        repository: novika-lang/novika
-        path: novika
+        with:
+          repository: novika-lang/novika
+          path: novika
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
       - name: Install UPX
