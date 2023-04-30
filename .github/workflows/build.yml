@@ -32,6 +32,7 @@ jobs:
         uses: proudust/gh-describe@v1
         with:
           repo: novika-lang/novika
+          commit-ish: refs/heads/rev10
       - name: Construct the artifact
         working-directory: novika
         run: |
