@@ -13,9 +13,11 @@ jobs:
       - name: Cancel previous
         uses: styfle/cancel-workflow-action@0.11.0
       - name: Download source
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
+        uses: actions/checkout@v3
+      - name: Download latest Novika
+        uses: actions/checkout@v3
+        repository: novika-lang/novika
+        path: novika
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
       - name: Install UPX
