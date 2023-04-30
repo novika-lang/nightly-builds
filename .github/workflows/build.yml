@@ -24,13 +24,18 @@ jobs:
       - name: Build Novika
         working-directory: novika
         run: shards build -Dnovika_console -Dnovika_readline --no-debug -Dpreview_mt --without-development
-      - name: Compress binaries using upx
-        working-directory: novika
-        run: upx --best bin/nkas bin/novika bin/nki
+      # - name: Compress binaries using upx
+      #   working-directory: novika
+      #   run: upx --best bin/nkas bin/novika bin/nki
       - name: Store release directory name in env
+        id: desc
+        uses: proudust/gh-describe@v1
+        with:
+          repo: novika-lang/novika
+      - name: Construct the artifact
         working-directory: novika
         run: |
-          export NOVIKA_DIR_NAME=novika-$(git describe --tags)-linux-x86_64
+          export NOVIKA_DIR_NAME=novika-${{ steps.desc.outputs.describe }}-linux-x86_64
           mkdir -p ../$NOVIKA_DIR_NAME/bin
           cp  bin/novika bin/nkas bin/nki ../$NOVIKA_DIR_NAME/bin
           cp -r env ../$NOVIKA_DIR_NAME/env
