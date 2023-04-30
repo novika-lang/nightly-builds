@@ -25,10 +25,10 @@ jobs:
           version: 1.0
       - name: Build Novika
         working-directory: novika
-        run: shards build -Dnovika_console -Dnovika_readline --no-debug -Dpreview_mt --without-development
-      # - name: Compress binaries using upx
-      #   working-directory: novika
-      #   run: upx --best bin/nkas bin/novika bin/nki
+        run: shards build -Dnovika_console -Dnovika_readline --release --no-debug -Dpreview_mt --without-development
+      - name: Compress binaries using upx
+        working-directory: novika
+        run: upx --best bin/nkas bin/novika bin/nki
       - name: Store release directory name in env
         id: desc
         uses: proudust/gh-describe@v1
