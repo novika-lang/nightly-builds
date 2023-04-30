@@ -50,6 +50,6 @@ jobs:
           echo "NOVIKA_DIR_NAME=$NOVIKA_DIR_NAME" >> $GITHUB_ENV
       - name: Upload Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
+          name: ${{ env.NOVIKA_DIR_NAME }}
           files: ${{ env.NOVIKA_DIR_NAME }}.tar.gz
