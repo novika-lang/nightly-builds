@@ -51,5 +51,6 @@ jobs:
       - name: Upload Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: tag-${{ steps.desc.outputs.describe }}
           name: ${{ env.NOVIKA_DIR_NAME }}
           files: ${{ env.NOVIKA_DIR_NAME }}.tar.gz
