@@ -40,7 +40,7 @@ jobs:
           mkdir -p ../$NOVIKA_DIR_NAME/bin
           cp  bin/novika bin/nkas bin/nki ../$NOVIKA_DIR_NAME/bin
           cp -r env ../$NOVIKA_DIR_NAME/env
-          cd $NOVIKA_DIR_NAME
+          cd ../$NOVIKA_DIR_NAME
           rm env/*.dll
           cp ../README.md ../LICENSE .
           cd ..
