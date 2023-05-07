@@ -9,9 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
     steps:
-      - name: Cancel previous
-        uses: styfle/cancel-workflow-action@0.11.0
       - name: Download source
         uses: actions/checkout@v3
       - name: Download latest Novika
@@ -57,3 +58,58 @@ jobs:
           tag_name: tag-${{ steps.desc.outputs.describe }}
           name: ${{ env.NOVIKA_DIR_NAME }}
           files: ${{ env.NOVIKA_DIR_NAME }}.tar.gz
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+    steps:
+      - name: Download source
+        uses: actions/checkout@v3
+      - name: Download latest Novika
+        uses: actions/checkout@v3
+        with:
+          repository: novika-lang/novika
+          path: novika
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1
+      - name: Install UPX
+        uses: crazy-max/ghaction-upx@v2
+        with:
+          install-only: true
+      - name: Build Novika
+        working-directory: novika
+        run: shards build --release --no-debug -Dpreview_mt --without-development
+      - name: Compress binaries using upx
+        working-directory: novika
+        run: upx --best bin/nkas bin/novika bin/nki
+      - name: Store release directory name in env
+        id: desc
+        uses: proudust/gh-describe@v1
+        with:
+          repo: novika-lang/novika
+          commit-ish: refs/heads/rev10
+      - name: Construct the artifact
+        working-directory: novika
+        run: |
+          export NOVIKA_DIR_NAME=novika-${{ steps.desc.outputs.describe }}-windows-x86_64
+          mkdir -p ../$NOVIKA_DIR_NAME/bin
+          cp  bin/novika bin/nkas bin/nki ../$NOVIKA_DIR_NAME/bin
+          cp -r env ../$NOVIKA_DIR_NAME/env
+          cd ../$NOVIKA_DIR_NAME
+          rm env/*.dll
+          cp ../README.md ../LICENSE .
+          cd ..
+          tar -czf $NOVIKA_DIR_NAME.zip $NOVIKA_DIR_NAME
+          echo "NOVIKA_DIR_NAME=$NOVIKA_DIR_NAME" >> $GITHUB_ENV
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: tag-${{ steps.desc.outputs.describe }}
+          name: ${{ env.NOVIKA_DIR_NAME }}
+          files: ${{ env.NOVIKA_DIR_NAME }}.zip
