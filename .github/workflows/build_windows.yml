@@ -31,10 +31,10 @@ jobs:
           install-only: true
       - name: Build Novika
         working-directory: novika
-        run: shards build --no-debug -Dpreview_mt --without-development
-      # - name: Compress binaries using upx
-      #   working-directory: novika
-      #   run: upx --best bin/nkas.exe bin/novika.exe bin/nki.exe
+        run: shards build --release --no-debug --without-development
+      - name: Compress binaries using upx
+        working-directory: novika
+        run: upx --best bin/nkas.exe bin/novika.exe bin/nki.exe
       - name: Store release directory name in env
         id: desc
         uses: proudust/gh-describe@v1
@@ -55,7 +55,7 @@ jobs:
       - name: Create zip file
         uses: vimtor/action-zip@v1
         with:
-          files: ${{ env.NOVIKA_DIR_NAME }}/
+          files: ${{ env.NOVIKA_DIR_NAME }}
           dest: ${{ env.NOVIKA_DIR_NAME }}.zip
       - name: Upload Release
         uses: softprops/action-gh-release@v1
