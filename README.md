@@ -105,5 +105,5 @@ Novika is powered by:
 * [termbox2](https://github.com/termbox/termbox2)
 * [libffi](https://github.com/libffi/libffi)
 * [upx](https://github.com/upx/upx)
-* [linenoise](https://github.com/antirez/linenoise)
+* [reply](https://github.com/I3oris/reply)
 * [tablo](https://github.com/hutou/tablo)

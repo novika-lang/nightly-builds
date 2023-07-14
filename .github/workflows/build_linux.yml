@@ -29,7 +29,7 @@ jobs:
           version: 1.0
       - name: Build Novika
         working-directory: novika
-        run: shards build -Dnovika_console -Dnovika_readline --release --no-debug -Dpreview_mt --without-development
+        run: shards build -Dnovika_console --release --no-debug -Dpreview_mt --without-development
       - name: Compress binaries using upx
         working-directory: novika
         run: upx --best bin/nkas bin/novika bin/nki
