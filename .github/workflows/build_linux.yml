@@ -22,6 +22,8 @@ jobs:
           path: novika
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: 1.14
       - name: Install UPX
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
